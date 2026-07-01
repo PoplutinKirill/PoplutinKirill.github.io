@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Портфолио студента - Навигатор по работам</title>
+    <style>
+        /* ===== Базовые стили ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0f0f1a;
+            background-image: radial-gradient(circle at 20% 20%, #1a1a2e, #0f0f1a 80%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 950px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            border-radius: 48px;
+            padding: 50px 40px 60px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 45px;
+        }
+
+        .header h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #f0f0ff, #a0a0ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+        }
+
+        .header p span {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* ===== Сетка с кнопками ===== */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        /* ===== Стиль каждой кнопки ===== */
+        .btn {
+            display: block;
+            padding: 22px 12px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 24px;
+            text-align: center;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #d0d0ee;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(120, 80, 255, 0.15), rgba(0, 200, 255, 0.05));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            border-radius: 24px;
+        }
+
+        .btn:hover {
+            transform: translateY(-4px) scale(1.02);
+            border-color: rgba(160, 130, 255, 0.4);
+            box-shadow: 0 16px 40px rgba(100, 70, 255, 0.25);
+            color: #ffffff;
+        }
+
+        .btn:hover::before {
+            opacity: 1;
+        }
+
+        .btn:active {
+            transform: scale(0.96);
+        }
+
+        /* ===== Индивидуальные цвета ===== */
+        .btn-lr1 { border-left: 4px solid #6c5ce7; }
+        .btn-lr4 { border-left: 4px solid #00b894; }
+        .btn-lr6 { border-left: 4px solid #e17055; }
+        .btn-lr9 { border-left: 4px solid #a29bfe; }
+        .btn-lr10 { border-left: 4px solid #fd79a8; }
+        .btn-pr1 { border-left: 4px solid #55efc4; color: #c0f0e0; }
+
+        /* ===== Аккордеон для ЛР 5 и ЛР 7 ===== */
+        .accordion-wrapper {
+            margin-top: 16px;
+            grid-column: 1 / -1;
+        }
+
+        .accordion-item {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .accordion-item:hover {
+            border-color: rgba(160, 130, 255, 0.3);
+        }
+
+        .accordion-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: 18px 24px;
+            background: transparent;
+            border: none;
+            color: #d0d0ee;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            text-align: left;
+        }
+
+        .accordion-header:hover {
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .accordion-header .arrow {
+            font-size: 1.4rem;
+            transition: transform 0.3s ease;
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .accordion-header.active .arrow {
+            transform: rotate(180deg);
+        }
+
+        .accordion-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.3s ease;
+            padding: 0 24px;
+        }
+
+        .accordion-body.open {
+            max-height: 600px;
+            padding: 0 24px 24px 24px;
+        }
+
+        .sub-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .sub-btn {
+            display: block;
+            padding: 12px 10px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 14px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #b0b0d0;
+            transition: all 0.2s ease;
+        }
+
+        .sub-btn:hover {
+            background: rgba(116, 185, 255, 0.15);
+            border-color: rgba(116, 185, 255, 0.4);
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+
+        /* ===== Специальные цвета для ЛР 7 ===== */
+        .lr7-header {
+            border-left: 4px solid #74b9ff !important;
+            padding-left: 12px;
+        }
+
+        .lr7-sub-btn:hover {
+            background: rgba(116, 185, 255, 0.15) !important;
+            border-color: rgba(116, 185, 255, 0.4) !important;
+        }
+
+        /* ===== Адаптив ===== */
+        @media (max-width: 600px) {
+            .container {
+                padding: 30px 20px 40px;
+                border-radius: 32px;
+            }
+            .header h1 {
+                font-size: 2.0rem;
+            }
+            .grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+            .btn {
+                padding: 18px 8px;
+                font-size: 1.0rem;
+                border-radius: 20px;
+            }
+            .sub-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 400px) {
+            .grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+            .btn {
+                padding: 14px 6px;
+                font-size: 0.9rem;
+            }
+            .header h1 {
+                font-size: 1.6rem;
+            }
+        }
+
+        .footer {
+            margin-top: 45px;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.15);
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- ===== ШАПКА ===== -->
+        <div class="header">
+            <h1>📁 Мой портфолио</h1>
+            <p><span>Студент</span> · Все лабораторные и практические работы</p>
+        </div>
+
+        <!-- ===== СЕТКА КНОПОК ===== -->
+        <div class="grid">
+
+            <!-- ===== ЛР 1-3 ===== -->
+            <a href="лаба 1-3/auto.html" target="_blank" class="btn btn-lr1">
+                📘 ЛР 1–3
+            </a>
+
+            <!-- ===== ЛР 4 ===== -->
+            <a href="лаба 4/auto.html" target="_blank" class="btn btn-lr4">
+                📗 ЛР 4
+            </a>
+
+            <!-- ===== ЛР 5 (с выпадающим списком) ===== -->
+            <div class="accordion-wrapper">
+                <div class="accordion-item">
+                    <button class="accordion-header" onclick="toggleAccordion(this)">
+                        <span style="border-left: 4px solid #fdcb6e; padding-left: 12px;">📙 ЛР 5</span>
+                        <span class="arrow">▼</span>
+                    </button>
+                    <div class="accordion-body">
+                        <div class="sub-grid">
+                            <a href="лаба 5/index1.html" target="_blank" class="sub-btn">📄 Главная</a>
+                            <a href="лаба 5/index2.html" target="_blank" class="sub-btn">📄 Задание 1</a>
+                            <a href="лаба 5/index3.html" target="_blank" class="sub-btn">📄 Задание 2</a>
+                            <a href="лаба 5/laba5.html" target="_blank" class="sub-btn">📄 Задание 3</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== ЛР 6 ===== -->
+            <a href="лаба 6/index.html" target="_blank" class="btn btn-lr6">
+                📕 ЛР 6
+            </a>
+
+            <!-- ===== ЛР 7 (с выпадающим списком - 2 файла) ===== -->
+            <div class="accordion-wrapper">
+                <div class="accordion-item">
+                    <button class="accordion-header" onclick="toggleAccordion(this)">
+                        <span class="lr7-header">📒 ЛР 7</span>
+                        <span class="arrow">▼</span>
+                    </button>
+                    <div class="accordion-body">
+                        <div class="sub-grid">
+                            <a href="лаба 7/index3.html" target="_blank" class="sub-btn lr7-sub-btn">📄 Главная</a>
+                            <a href="лаба 7/nike.html" target="_blank" class="sub-btn lr7-sub-btn">📄 Задание</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== ЛР 9 ===== -->
+            <a href="лаба 9/index.html" target="_blank" class="btn btn-lr9">
+                 ЛР 9
+            </a>
+
+            <!-- ===== ЛР 10-12 ===== -->
+            <a href="ЛР 10-11-12/index.html" target="_blank" class="btn btn-lr10">
+                 ЛР 10–12
+            </a>
+
+            <!-- ===== Практическая 1 ===== -->
+            <a href="ПР1/index.html" target="_blank" class="btn btn-pr1">
+                 Пр 1
+            </a>
+
+        </div>
+
+        <!-- ===== ПОДВАЛ ===== -->
+        <div class="footer">
+            GitHub Pages · Нажми на ЛР 5 или ЛР 7, чтобы раскрыть список файлов
+        </div>
+
+    </div>
+
+    <!-- ===== JavaScript ===== -->
+    <script>
+        function toggleAccordion(button) {
+            const allHeaders = document.querySelectorAll('.accordion-header');
+            const allBodies = document.querySelectorAll('.accordion-body');
+            
+            const currentBody = button.nextElementSibling;
+            const isOpen = currentBody.classList.contains('open');
+            
+            // Закрываем все
+            allHeaders.forEach(h => h.classList.remove('active'));
+            allBodies.forEach(b => b.classList.remove('open'));
+            
+            // Если текущая была закрыта — открываем её
+            if (!isOpen) {
+                button.classList.add('active');
+                currentBody.classList.add('open');
+            }
+        }
+    </script>
+
+</body>
+</html>
